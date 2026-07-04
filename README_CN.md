@@ -1,73 +1,73 @@
-# CS2Lab — CS2 道具实验室
+# CS2Lab
 
-> 全地图道具教学，从站位、准星到投掷方法，图文并茂。
+CS2 全竞技地图道具教学工具，覆盖投掷点位、准星参照、道具组合配合。
 
-## 背景
+## Features
 
-CS2 中，一颗烟雾弹可能决定回合胜负。但寻找可靠的道具投掷点位，通常需要在 YouTube 反复暂停、回放，或记忆那些随版本更新就会失效的参照物。
+- 7 张竞技地图的烟雾弹、闪光弹、燃烧弹、高爆手雷点位图鉴
+- 每处投掷标注站位、准星参照截图和投掷方式（左键/右键/跳投）
+- 多道具配合说明，地图叠加显示覆盖区域
+- 按场景描述智能匹配已有教学内容
+- 用户投稿未收录点位，审核后发布
+- 收藏常用点位并添加个人笔记
 
-CS2Lab 将道具教学整合为统一工具：截图标注准星位置、详细投掷说明、道具组合配合图解。一站覆盖全部竞技地图。
+## Architecture
 
-## 功能
+```text
+Browser
+  ↓
+React Frontend (Oxelia51 unified UI, image annotation)
+  ↓
+Go API Layer (content CRUD, search, submission review)
+  ↓
+PostgreSQL / SQLite (maps, lineups, user data)
+```
 
-| 模块 | 内容 |
-|------|------|
-| **道具图鉴** | 烟雾弹、闪光弹、燃烧弹、手雷的基础参数：伤害、范围、持续时间、价格 |
-| **投掷教学** | 站位标记 + 准星参照截图 + 投掷方式（左键/右键/跳投） |
-| **组合教学** | 多道具配合说明 + 地图叠加展示覆盖范围 |
-| **智能搜索** | 根据场景描述匹配已有教学内容 |
-| **用户投稿** | 提交未收录点位，审核后发布 |
-| **收藏笔记** | 收藏常用点位，添加个人心得 |
+在线版运行于 Oxelia51 平台。道具截图和标注数据通过 Go 后端管理。桌面版使用 SQLite 替代 PostgreSQL，地图数据打包在二进制中，无需联网。
 
-## 道具覆盖
+## Requirements
 
-| 道具 | 参数 | 教学 |
-|------|------|------|
-| 烟雾弹 | ✅ | ✅ |
-| 闪光弹 | ✅ | ✅ |
-| 燃烧弹 | ✅ | ✅ |
-| 高爆手雷 | ✅ | ✅ |
+- 在线版：Oxelia51 平台（Go + PostgreSQL + React）
+- 桌面版：独立可执行文件，无需运行时依赖
 
-## 地图覆盖
+## Installation
 
-全部竞技图池 7 张地图，从 Dust2 开始逐张扩展。
+### 桌面版
 
-## 内容风格
+从 [GitHub Releases](https://github.com/XiaoleC05/CS2Lab/releases) 下载 `CS2Lab.exe`。
 
-- 使用官方地图截图加标注，不做 3D 渲染
-- 准星位置清晰标注
-- 文字说明与标注截图配套
+### 在线版
 
-## 不做范围
+在线版集成于 Oxelia51 平台，参见 [Oxelia51 部署指南](https://github.com/XiaoleC05/Oxelia51)。
 
-- 不涉及战术分析与回放标记
-- 不涉及 AI 战术生成
-- 不涉及枪械指南
-
-## 技术栈
-
-| 环境 | 后端 | 数据库 | 前端 |
-|------|------|--------|------|
-| 在线（Oxelia51） | Go | PostgreSQL | React |
-| 桌面（exe） | Go | SQLite | 内嵌 React |
-
-## 使用方式
+## Usage
 
 ### 在线
 
-1. 访问 [oxelia51.com](https://oxelia51.com) 注册登录
-2. 从工具菜单打开 CS2Lab
-3. 浏览地图、搜索点位、收藏常用
+1. 访问 [oxelia51.com](https://oxelia51.com) 注册并登录
+2. 进入 CS2Lab 工具页
+3. 选择地图和道具类型，浏览点位
 
 ### 桌面
 
-1. 从 [GitHub Releases](https://github.com/XiaoleC05/CS2Lab/releases) 下载 `CS2Lab.exe`
-2. 双击运行，数据内置，无需联网
+1. 双击 `CS2Lab.exe` 启动
+2. 数据内置，无需联网
 
-## 贡献
+## Roadmap
 
-发现未收录的好点位？通过应用内提交。审核通过后发布。
+- [ ] 首张地图（Dust2）完整道具覆盖
+- [ ] 扩展至全部 7 张竞技地图
+- [ ] 智能搜索
+- [ ] 用户投稿与审核
 
-## 开发状态
+## Contributing
 
-概念阶段，尚未开发。
+1. Fork 本仓库
+2. 创建功能分支 (`git checkout -b feature/xxx`)
+3. 提交变更 (`git commit -m 'Add xxx'`)
+4. 推送分支 (`git push origin feature/xxx`)
+5. 提交 Pull Request
+
+## License
+
+This project is licensed under the MIT License.

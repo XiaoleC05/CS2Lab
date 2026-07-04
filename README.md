@@ -1,77 +1,73 @@
-# CS2Lab — Counter-Strike 2 Utility Laboratory
+# CS2Lab
 
-> Master every grenade on every map. Step-by-step guides, lineup screenshots, and smart recommendations.
-
-## Why CS2Lab?
-
-In CS2, knowing how to throw a smoke grenade can win rounds. But finding reliable lineups means watching hours of YouTube videos, pausing frame by frame, and memorizing references that change with every update.
-
-**CS2Lab** is your single source for utility knowledge: clear screenshots with crosshair markers, written throw instructions, and combo guides that show you how grenades work together.
+CS2 utility training tool covering every Active Duty map with throw lineups, crosshair references, and combo guides.
 
 ## Features
 
-| Module | What You Get |
-|--------|-------------|
-| **Utility Database** | Stats for smokes, flashes, molotovs, and HE grenades — damage, radius, duration, price |
-| **Throw Guides** | Position marker + crosshair reference screenshot + throw type (left-click/right-click/jump-throw) |
-| **Combo Guides** | "Smoke CT spawn, then flash over the wall" — explained with map overlays |
-| **Map Coverage** | All 7 Active Duty maps: Dust2, Mirage, Inferno, Nuke, Vertigo, Ancient, Anubis |
-| **Smart Search** | Describe your situation (e.g. "pushing mid on Dust2 as T") → get recommended utility |
-| **Community Contributions** | Submit your own lineups — published after admin review |
-| **Favorites & Notes** | Bookmark your most-used lineups and add personal tips |
+- Utility guides for smoke grenades, flashbangs, molotovs, and HE grenades across all 7 competitive maps
+- Each lineup includes position, crosshair reference screenshot, and throw type (left-click/right-click/jump-throw)
+- Combo guides with map overlays showing coverage areas for multi-utility setups
+- Smart search matching situational descriptions to existing content
+- Community submissions with admin review before publication
+- Bookmark lineups and add personal notes
 
-## Utility Coverage
+## Architecture
 
-| Grenade | Stats | Throw Guides |
-|---------|-------|--------------|
-| Smoke Grenade | ✅ | ✅ |
-| Flashbang | ✅ | ✅ |
-| Molotov / Incendiary | ✅ | ✅ |
-| HE Grenade | ✅ | ✅ |
+```text
+Browser
+  ↓
+React Frontend (Oxelia51 unified UI, image annotation)
+  ↓
+Go API Layer (content CRUD, search, submission review)
+  ↓
+PostgreSQL / SQLite (maps, lineups, user data)
+```
 
-## Map Coverage
+The online version runs on the Oxelia51 platform. Screenshots and annotation data are managed by the Go backend. The desktop version uses SQLite and bundles map data in the binary.
 
-All Active Duty maps, starting with Dust2 and expanding:
+## Requirements
 
-Dust2 → Mirage → Inferno → Nuke → Vertigo → Ancient → Anubis
+- Online: Oxelia51 platform (Go, PostgreSQL, React)
+- Desktop: standalone executable, no runtime dependencies
 
-## Content Style
+## Installation
 
-- **No 3D rendering** — uses official map screenshots with annotation overlays
-- **Screenshot-based lineups** — crosshair position clearly marked, no guesswork
-- **Written + visual** — every lineup has both text instructions and a marked screenshot
+### Desktop
 
-## What CS2Lab Is NOT
+Download `CS2Lab.exe` from [GitHub Releases](https://github.com/XiaoleC05/CS2Lab/releases).
 
-- ❌ Not a tactics analyzer — no match replay analysis or team strategy generation
-- ❌ Not an AI coach — smart search matches your situation to existing guides, it doesn't generate new tactics
-- ❌ Not a full weapon guide — focused on throwable utility only
+### Online
 
-## Tech Stack
+Integrated into the Oxelia51 platform. See [Oxelia51 deployment guide](https://github.com/XiaoleC05/Oxelia51).
 
-| Environment | Backend | Database | Frontend | Special |
-|-------------|---------|----------|----------|---------|
-| Online (Oxelia51) | Go | PostgreSQL | React | Image storage |
-| Desktop (exe) | Go | SQLite | Embedded React | Same, packaged as exe |
+## Usage
 
-## Getting Started
+### Online
 
-### Online (via Oxelia51)
-
-1. Visit [oxelia51.com](https://oxelia51.com) and sign in
+1. Visit [oxelia51.com](https://oxelia51.com), register and sign in
 2. Open CS2Lab from the tools menu
-3. Browse maps, search for lineups, save your favorites
+3. Select a map and utility type to browse lineups
 
-### Desktop (exe)
+### Desktop
 
-1. Download `CS2Lab.exe` from [GitHub Releases](https://github.com/XiaoleC05/CS2Lab/releases)
-2. Run the executable — opens a local web interface
-3. All data is bundled in the app, no internet required for browsing
+1. Double-click `CS2Lab.exe` to start
+2. All data is built-in, no internet required
+
+## Roadmap
+
+- [ ] Complete utility coverage for Dust2 (first map)
+- [ ] Expand to all 7 Active Duty maps
+- [ ] Smart search
+- [ ] Community submissions and review
 
 ## Contributing
 
-Found a great lineup that's not in the database? Submit it through the app. All submissions go through admin review before being published to ensure quality.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/xxx`)
+3. Commit your changes (`git commit -m 'Add xxx'`)
+4. Push the branch (`git push origin feature/xxx`)
+5. Open a Pull Request
 
-## Status
+## License
 
-Concept phase. Development not yet started.
+This project is licensed under the MIT License.
