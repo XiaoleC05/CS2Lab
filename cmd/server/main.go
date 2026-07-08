@@ -12,9 +12,18 @@ import (
 	"github.com/XiaoleC05/CS2Lab/internal/config"
 	"github.com/XiaoleC05/CS2Lab/internal/db"
 	"github.com/XiaoleC05/CS2Lab/internal/handler"
+	"strings"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
+
+func corsOrigins() []string {
+	if v := os.Getenv("CORS_ALLOWED_ORIGINS"); v != "" {
+		return strings.Split(v, ",")
+	}
+	return []string{"http://localhost:5173"}
+}
 
 func main() {
 	// Load configuration
@@ -42,9 +51,9 @@ func main() {
 
 	// Configure CORS
 	corsConfig := cors.Config{
-		AllowOrigins:     []string{"*"},
+		AllowOrigins:     corsOrigins(),
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization", "X-User-ID"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization", "X-User-Id", "X-Username", "X-Role"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
