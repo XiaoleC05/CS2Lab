@@ -51,17 +51,17 @@ func (r *NoteRepository) Upsert(ctx context.Context, userID, lineupID int64, con
 	return &n, nil
 }
 
-// Delete deletes a note
-func (r *NoteRepository) Delete(ctx context.Context, userID, lineupID int64) error {
+// Delete deletes a note and returns affected row count.
+func (r *NoteRepository) Delete(ctx context.Context, userID, lineupID int64) (int64, error) {
 	query := `
 		DELETE FROM cs2lab.notes
 		WHERE user_id = $1 AND lineup_id = $2
 	`
 
-	_, err := pool.Exec(ctx, query, userID, lineupID)
+	result, err := pool.Exec(ctx, query, userID, lineupID)
 	if err != nil {
-		return fmt.Errorf("failed to delete note: %w", err)
+		return 0, fmt.Errorf("failed to delete note: %w", err)
 	}
 
-	return nil
+	return result.RowsAffected(), nil
 }

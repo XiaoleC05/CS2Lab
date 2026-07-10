@@ -25,7 +25,7 @@ func NewMapHandler() *MapHandler {
 func (h *MapHandler) GetAll(c *gin.Context) {
 	maps, err := h.repo.GetAll(c.Request.Context())
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		respondInternalError(c, err)
 		return
 	}
 
@@ -97,7 +97,7 @@ func (h *LineupHandler) GetFiltered(c *gin.Context) {
 
 	lineups, err := h.repo.GetFiltered(c.Request.Context(), filter)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		respondInternalError(c, err)
 		return
 	}
 
@@ -144,7 +144,7 @@ func (h *FavoriteHandler) GetByUser(c *gin.Context) {
 
 	favorites, err := h.repo.GetByUser(c.Request.Context(), userID.(int64))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		respondInternalError(c, err)
 		return
 	}
 
@@ -170,7 +170,7 @@ func (h *FavoriteHandler) Add(c *gin.Context) {
 
 	err := h.repo.Add(c.Request.Context(), userID.(int64), req.LineupID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		respondInternalError(c, err)
 		return
 	}
 
@@ -194,7 +194,7 @@ func (h *FavoriteHandler) Remove(c *gin.Context) {
 
 	err = h.repo.Remove(c.Request.Context(), userID.(int64), lineupID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		respondInternalError(c, err)
 		return
 	}
 
@@ -263,11 +263,39 @@ func (h *NoteHandler) Upsert(c *gin.Context) {
 
 	note, err := h.repo.Upsert(c.Request.Context(), userID.(int64), lineupID, req.Content)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		respondInternalError(c, err)
 		return
 	}
 
 	c.JSON(http.StatusOK, note)
+}
+
+// Delete handles DELETE /api/notes/:lineupId
+func (h *NoteHandler) Delete(c *gin.Context) {
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "user not authenticated"})
+		return
+	}
+
+	lineupIDStr := c.Param("lineupId")
+	lineupID, err := strconv.ParseInt(lineupIDStr, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid lineup ID"})
+		return
+	}
+
+	rows, err := h.repo.Delete(c.Request.Context(), userID.(int64), lineupID)
+	if err != nil {
+		respondInternalError(c, err)
+		return
+	}
+	if rows == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"error": "note not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "note deleted"})
 }
 
 // HealthHandler handles health check requests

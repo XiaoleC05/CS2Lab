@@ -88,6 +88,7 @@ func main() {
 		protected.DELETE("/favorites/:lineupId", favoriteHandler.Remove)
 		protected.GET("/notes/:lineupId", noteHandler.GetByLineup)
 		protected.PUT("/notes/:lineupId", noteHandler.Upsert)
+		protected.DELETE("/notes/:lineupId", noteHandler.Delete)
 	}
 
 	// Set up graceful shutdown

@@ -16,12 +16,7 @@ import (
 func AuthMiddleware(cfg *config.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if cfg.OxeliaGatewayMode {
-			// In gateway mode, extract user ID from Oxelia51 gateway headers
 			userIDStr := c.GetHeader("X-User-Id")
-			if userIDStr == "" {
-				// Fallback: also accept X-User-ID (case-insensitive header matching)
-				userIDStr = c.GetHeader("X-User-ID")
-			}
 			if userIDStr == "" {
 				c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
 				c.Abort()
