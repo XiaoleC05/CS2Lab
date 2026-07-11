@@ -92,3 +92,20 @@ func (r *LineupRepository) GetByID(ctx context.Context, id int64) (*model.Lineup
 
 	return &l, nil
 }
+
+
+// Create adds a new lineup
+func (r *LineupRepository) Create(ctx context.Context, l *model.Lineup) (*model.Lineup, error) {
+	query := `
+		INSERT INTO cs2lab.lineups (map_id, title, type, description, throw_style, image_urls)
+		VALUES ($1, $2, $3, $4, $5, $6)
+		RETURNING id, map_id, title, type, description, throw_style, image_urls, created_at, updated_at
+	`
+	err := pool.QueryRow(ctx, query,
+		l.MapID, l.Title, l.Type, l.Description, l.ThrowStyle, l.ImageURLs,
+	).Scan(&l.ID, &l.MapID, &l.Title, &l.Type, &l.Description, &l.ThrowStyle, &l.ImageURLs, &l.CreatedAt, &l.UpdatedAt)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create lineup: %w", err)
+	}
+	return l, nil
+}

@@ -89,6 +89,17 @@ func main() {
 		protected.GET("/notes/:lineupId", noteHandler.GetByLineup)
 		protected.PUT("/notes/:lineupId", noteHandler.Upsert)
 		protected.DELETE("/notes/:lineupId", noteHandler.Delete)
+
+	}
+
+	// Admin routes (admin only)
+	adminProtected := r.Group("/api/admin")
+	adminProtected.Use(handler.AuthMiddleware(cfg))
+	adminProtected.Use(handler.AdminOnly())
+	{
+		adminProtected.POST("/maps", mapHandler.CreateMap)
+		adminProtected.DELETE("/maps/:id", mapHandler.DeleteMap)
+		adminProtected.POST("/lineups", lineupHandler.CreateLineup)
 	}
 
 	// Set up graceful shutdown

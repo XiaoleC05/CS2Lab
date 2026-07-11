@@ -54,3 +54,16 @@ func AuthMiddleware(cfg *config.Config) gin.HandlerFunc {
 		c.Abort()
 	}
 }
+
+// AdminOnly ensures the request has X-Role=admin (injected by gateway)
+func AdminOnly() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		role := c.GetHeader("X-Role")
+		if role != "admin" {
+			c.JSON(http.StatusForbidden, gin.H{"error": "admin only"})
+			c.Abort()
+			return
+		}
+		c.Next()
+	}
+}

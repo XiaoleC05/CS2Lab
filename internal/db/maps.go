@@ -62,3 +62,31 @@ func (r *MapRepository) GetByID(ctx context.Context, id int64) (*model.MapWithLi
 
 	return &m, nil
 }
+
+
+// Create adds a new map
+func (r *MapRepository) Create(ctx context.Context, name, displayName string) (*model.Map, error) {
+	query := `
+		INSERT INTO cs2lab.maps (name, display_name)
+		VALUES ($1, $2)
+		RETURNING id, name, display_name, created_at
+	`
+	var m model.Map
+	err := pool.QueryRow(ctx, query, name, displayName).Scan(&m.ID, &m.Name, &m.DisplayName, &m.CreatedAt)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create map: %w", err)
+	}
+	return &m, nil
+}
+
+// Delete removes a map by ID
+func (r *MapRepository) Delete(ctx context.Context, id int64) error {
+	cmd, err := pool.Exec(ctx, `DELETE FROM cs2lab.maps WHERE id = $1`, id)
+	if err != nil {
+		return fmt.Errorf("failed to delete map: %w", err)
+	}
+	if cmd.RowsAffected() == 0 {
+		return fmt.Errorf("map not found")
+	}
+	return nil
+}
